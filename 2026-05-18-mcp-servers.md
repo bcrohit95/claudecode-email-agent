@@ -1,39 +1,25 @@
 # MCP Servers
 
-MCP (Model Context Protocol) Servers extend Claude Code by connecting it to external tools and data sources — think databases, APIs, file systems, or services like Gmail and GitHub. You configure them in your project or user settings, and Claude can then call them as tools during a session, just like built-in tools. This turns Claude Code from a coding assistant into a connected agent that can read emails, query databases, or interact with any service that has an MCP server.
+**Model Context Protocol (MCP) servers** let Claude Code connect to external tools and data sources — like databases, APIs, file systems, or web browsers — through a standardized interface. You configure them once in your Claude Code settings and Claude can then call them as tools during any session. This is how you extend Claude beyond its built-in capabilities without writing custom integrations each time.
 
-## Example
+## Copy-pasteable example
 
-Add this to your `.claude/settings.json` to wire up Gmail and GitHub MCP servers:
+Add a filesystem MCP server to your project settings:
 
 ```json
+// .claude/settings.json
 {
   "mcpServers": {
-    "gmail": {
+    "filesystem": {
       "command": "npx",
-      "args": ["-y", "@gptscript-ai/claude-gmail-mcp"]
-    },
-    "github": {
-      "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-github"],
-      "env": {
-        "GITHUB_PERSONAL_ACCESS_TOKEN": "<your-token>"
-      }
+      "args": ["-y", "@modelcontextprotocol/server-filesystem", "/home/user/projects"]
     }
   }
 }
 ```
 
-Once added, Claude will automatically have access to those tools in every session for that project.
+After saving, run `claude` and ask: *"List the files in my projects folder"* — Claude will use the MCP server automatically.
 
 ## Try it yourself
 
-Add the filesystem MCP server to your project settings:
-
-```bash
-npx @modelcontextprotocol/server-filesystem /path/to/your/project
-```
-
-Then ask Claude: "List all TypeScript files in my project." Watch it use the MCP tool automatically — no extra prompting needed.
-
-> **Pro tip:** Run `claude mcp list` in your terminal to see all MCP servers currently configured for your session.
+Install the official Postgres MCP server (`npx @modelcontextprotocol/server-postgres`) and point it at a local DB. Then ask Claude to describe your schema or write a query — no copy-pasting connection strings or table names needed.
